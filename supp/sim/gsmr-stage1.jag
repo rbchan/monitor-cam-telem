@@ -1,0 +1,25 @@
+model {
+  
+    sigmaMean ~ dunif(0, 5000)
+    lam0Mean ~ dunif(0, 2)
+
+    for(t in 1:T) { 
+        sigma[t] <- sigmaMean
+        lam0[t] <- lam0Mean
+        for(i in 1:n.marked[t]) { 
+            s[i,1,t] ~ dunif(xlim[1], xlim[2])
+            s[i,2,t] ~ dunif(ylim[1], ylim[2])
+            for(j in 1:J) { # loop over each trap location
+                d[i,j,t] <- sqrt((s[i,1,t]-x[j,1])^2 + (s[i,2,t]-x[j,2])^2)
+                lambda[i,j,t] <- lam0[t]*exp(-d[i,j,t]^2 / (2*sigma[t]^2))
+                pm[i,j,t] <- 1-exp(-lambda[i,j,t])
+                y[i,j,t] ~ dbin(pm[i,j,t], K)
+            }
+            for(k in 1:K) {
+                u[i,k,t,1] ~ dnorm(s[i,1,t], 1/sigma[t]^2)
+                u[i,k,t,2] ~ dnorm(s[i,2,t], 1/sigma[t]^2)
+            }
+        }
+    }
+
+}

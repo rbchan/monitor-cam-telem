@@ -1,0 +1,49 @@
+model {
+  
+    # sigmaMean ~ dunif(0, 5000)
+    # lam0Mean ~ dunif(0, 2)
+    log.sigma.lam0 ~ dmnorm.vcov(mean.log.sigma.lam0, vcov.log.sigma.lam0)
+    sigmaMean <- exp(log.sigma.lam0[1])
+    lam0Mean <- exp(log.sigma.lam0[2])
+
+    beta0.ED ~ dnorm(0, 0.01)  
+    beta1.ED ~ dnorm(0, 0.1)    
+
+    for(t in 1:T) { 
+        sigma[t] <- sigmaMean
+        lam0[t] <- lam0Mean
+    }
+
+    eps.sd ~ dunif(0, 2) ## SD of density noise
+    alpha ~ dunif(-1, 1) ## AR1 correlation
+    epsilon[1] ~ dnorm(0, 1/eps.sd^2)
+    ED[1] <- max(beta0.ED + beta1.ED*1 + epsilon[1], 0) 
+    EN[1] <- ED[1]*Area
+    psi[1] <- EN[1]/M
+    for(t in 2:T) {
+        epsilon[t] ~ dnorm(alpha*epsilon[t-1], 1/eps.sd^2)
+        ED[t] <- max(beta0.ED + beta1.ED*t + epsilon[t], 0) 
+        EN[t] <- ED[t]*Area
+        psi[t] <- EN[t]/M
+    }
+
+    for(t in 1:T) { 
+        for(i in 1:M) { 
+            z[i,t] ~ dbern(psi[t])
+            s[i,1,t] ~ dunif(xlim[1], xlim[2])
+            s[i,2,t] ~ dunif(ylim[1], ylim[2])
+            for(j in 1:J) { # loop over each trap location
+                d[i,j,t] <- sqrt((s[i,1,t]-x[j,1])^2 + (s[i,2,t]-x[j,2])^2)
+                lambda[i,j,t] <- lam0[t]*exp(-d[i,j,t]^2 / (2*sigma[t]^2))
+            }
+        }
+        ## Unmarked individuals
+        for(j in 1:J) {
+            Lambda[j,t] <- inprod(lambda[1:M,j,t], z[1:M,t])
+            p[j,t] <- 1-exp(-Lambda[j,t])
+            n[j,t] ~ dbin(p[j,t], K)
+        }
+        N[t] <- sum(z[1:M,t])
+        D[t] <- N[t]/Area
+    }
+}
