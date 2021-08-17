@@ -1,0 +1,78 @@
+\documentclass[12pt]{article}
+
+\usepackage[vmargin=1in,hmargin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage[parfill]{parskip}
+\usepackage{hyperref}
+\usepackage{natbib}
+\usepackage{bm}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{abstract}
+\usepackage{lineno}
+\usepackage{setspace}
+
+\hypersetup{pdfstartview={Fit},hidelinks}
+
+
+\usepackage{caption}
+\captionsetup[figure]{labelformat=empty}% redefines the caption setup of the figures environment in the beamer class.
+
+
+\title{Ecological Applications Appendix S1 \\ Simulation study accompanying the paper: \\ \it Monitoring partially-marked populations using camera and telemetry data }
+\author{Lydia L. S. Margenau$^{1}$\footnote{Corresponding author: lydia.margenau@wisconsin.gov}, Michael J. Cherry$^2$,  Karl V. Miller$^1$, \\ Elina P. Garrison$^3$, Richard B. Chandler$^1$}
+
+
+\begin{document}
+
+
+
+\maketitle
+
+\vspace{12pt}
+
+\begin{description}%[labelindent=1pt]%[leftmargin=1cm]%,labelwidth=\widthof{\bfseries Example:}]
+%  \large
+\item[$^1$] Warnell School of Forestry and Natural Resources, University of Georgia %\\
+\item[$^2$] Caesar Kleberg Wildlife Research Institute at Texas A\&M University-Kingsville %\\
+\item[$^3$] Florida Fish and Wildlife Conservation Commission %\\
+\end{description}
+
+\clearpage
+
+\section*{Introduction and Methods}
+
+We conducted a small simulation study to evaluate the performance of the
+
+Code to reproduce the simulation study can be found at
+\url{https://github.com/rbchan/scr-move/R/sims}.
+
+
+\section*{Results and Discussion}
+
+The number of individuals captured and outfitted with telemetry
+devices ranged from 13--35 in the simulated datasets. As with the deer
+example, only a small fraction (ranging from 0--10) were detected by
+cameras. 
+
+
+
+% \clearpage
+
+% \begin{figure}[h!]
+%   \centering
+%   \includegraphics[width=0.5\textwidth, trim=0mm 15mm 0mm 15mm, clip]{../R/sims/bias-N.pdf} \\
+%   \includegraphics[width=0.5\textwidth, trim=0mm 15mm 0mm 15mm, clip]{../R/sims/cover-N.pdf} \\
+%   \includegraphics[width=0.5\textwidth, trim=0mm 0mm 0mm 15mm, clip]{../R/sims/var-N.pdf}
+%   \caption{Figure S1. Bias, 95\% CI coverage, and variance of the posterior mode
+%     as a point estimator of population size ($N$) under five values of
+%     the parameter $\rho$ controlling autocorrelation in movement. The
+%     data generating value of abundance was $N=100$. } 
+%   \label{fig:bias}
+% \end{figure}
+
+
+
+\end{document}
+
+
