@@ -54,7 +54,7 @@ do.jags.stage1 <- function(dataset) {
 
     jm <- jags.model(file="gsmr-stage1.jag", data=jd, inits=ji, n.adapt=100)
 
-    jc <- coda.samples(jm, jp, n.iter=12000)
+    jc <- coda.samples(jm, jp, n.iter=2000) ##12000)
 
     return(jc)
 
@@ -72,7 +72,6 @@ do.jags.stage2 <- function(dataset) {
                     J=nrow(n.all), T=ncol(n.all),
                     xlim = xlim, ylim = ylim, 
                     Area = Area, x = x, 
-##                    n=n.unmarked,   ## BUG FIX: 2021-08-10
                     n=n.all,
                     mean.log.sigma.lam0=mean.log.sigma.lam0,
                     vcov.log.sigma.lam0=vcov.log.sigma.lam0))
@@ -93,7 +92,7 @@ do.jags.stage2 <- function(dataset) {
 
     jm2 <- jags.model(file="gsmr-stage2.jag", data=jd2, inits=ji2, n.adapt=100)
 
-    jc2 <- coda.samples(jm2, jp2, n.iter=12000)
+    jc2 <- coda.samples(jm2, jp2, n.iter=2000) ##12000)
 
     return(jc2)
 
@@ -104,12 +103,8 @@ do.jags.stage2 <- function(dataset) {
 
 ## Lists to hold posterior samples for each dataset
 samples.stage1 <- vector(mode="list", length=n.datasets) 
-load("samples_stage1.gzip")
 samples.stage2 <- vector(mode="list", length=n.datasets)
 
-
-## Next line added on 2021-08-10 so that I can run just stage 2 
-load("samples_stage1.gzip")
 
 
 ## Loop over batches
@@ -117,11 +112,10 @@ for(i in 1:n.batches) {
     library(coda)
     cat("Doing batch", i, format(Sys.time()), "\n")
     batch <- seq(1+batch.size*(i-1), length.out=batch.size)
-    ## Next 4 lines commented out on 2021-08-10 so that I can deal with bug fix above
-    ## samples.stage1[batch] <- parSapply(cl=cl, X=sims.case1[batch],
-    ##                                    FUN=do.jags.stage1)
-    ## if(i == 1)
-    ##     save(samples.stage1, file="samples_stage1.gzip")
+    samples.stage1[batch] <- parSapply(cl=cl, X=sims.case1[batch],
+                                       FUN=do.jags.stage1)
+    if(i == 1)
+        save(samples.stage1, file="samples_stage1.gzip")
     for(j in batch) {
         samps <- log(as.matrix(samples.stage1[[j]]))
         ## Next line is a bug fix. Order was wrong before 2021-07-06
@@ -138,7 +132,7 @@ for(i in 1:n.batches) {
     gc()
 }
 
-## save(samples.stage1, file="samples_stage1.gzip")
+save(samples.stage1, file="samples_stage1.gzip")
 save(samples.stage2, file="samples_stage2.gzip")
 
 cat("Done", format(Sys.time()), "\n")

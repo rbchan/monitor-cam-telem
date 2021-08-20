@@ -42,10 +42,19 @@
 
 \section*{Introduction and Methods}
 
-We conducted a small simulation study to evaluate the performance of the
-
-Code to reproduce the simulation study can be found at
-\url{https://github.com/rbchan/scr-move/R/sims}.
+We conducted a small simulation study to compare the performance of
+the joint generalized spatial mark-resight (gSMR) model with the
+two-stage gSMR model. One hundred datasets were simulated from the
+model with parameters chosen to resemble the deer study described in
+the manuscript. Specifically, parameters were $\beta_0=1$,
+$\beta_1=-0.02$, $\alpha=0.5$, $\sigma_{\epsilon}=0.1$,
+$\lambda_0=0.07$, and $\sigma=400$. For the joint model, we assumed a
+uniform marking process with $p^{\rm cap}=0.2$. The design involved 60
+cameras with the same spatial arrangement as the cameras at our AL
+study site. We modeled the population over 20 primary sampling
+periods, each corresponding to a 14-day period. We simulated one
+telemetry location per day. Code to reproduce the simulation study can
+be found at \url{https://github.com/rbchan/monitor-cam-telem}.
 
 
 \section*{Results and Discussion}
@@ -57,19 +66,30 @@ cameras.
 
 
 
-% \clearpage
+\clearpage
 
-% \begin{figure}[h!]
-%   \centering
-%   \includegraphics[width=0.5\textwidth, trim=0mm 15mm 0mm 15mm, clip]{../R/sims/bias-N.pdf} \\
-%   \includegraphics[width=0.5\textwidth, trim=0mm 15mm 0mm 15mm, clip]{../R/sims/cover-N.pdf} \\
-%   \includegraphics[width=0.5\textwidth, trim=0mm 0mm 0mm 15mm, clip]{../R/sims/var-N.pdf}
-%   \caption{Figure S1. Bias, 95\% CI coverage, and variance of the posterior mode
-%     as a point estimator of population size ($N$) under five values of
-%     the parameter $\rho$ controlling autocorrelation in movement. The
-%     data generating value of abundance was $N=100$. } 
-%   \label{fig:bias}
-% \end{figure}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.7\textwidth]{sim/sim-lam0sig}
+  \caption{Figure S1. Results from the 100 simulated datasets used to
+    compare posterior means for the encounter rate parameters
+    ($\lambda_0$ and $\sigma$) for the joint model and the two-stage
+    model. }   
+  \label{fig:sim-lam0sig}
+\end{figure}
+
+
+\clearpage
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.7\textwidth]{sim/sim-betas}
+  \caption{Figure S1. Results from the 100 simulated datasets used to
+    compare posterior means for the density trend parameters
+    ($\beta_0$ and $\beta_1$) for the joint model and 
+    the two-stage model. }  
+  \label{fig:sim-betas}
+\end{figure}
 
 
 
