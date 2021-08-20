@@ -19,17 +19,20 @@ plot(samples.joint[[1]])
 
 ## Compare encounter rate parameters
 
-lam.sig.mean.st1 <- t(sapply(samples.stage1, colMeans))
-lam.sig.mean.st2 <- t(sapply(samples.stage2, function(x)
-    colMeans(x[,c("lam0Mean", "sigmaMean")])))
-lam.sig.mean.joint <- t(sapply(samples.joint, function(x)
-    colMeans(x[,c("lam0Mean", "sigmaMean")])))
+burn <- 1:1000
 
-## Stage 1 estimates are poor when few animal have transmitters
+lam.sig.mean.st1 <- t(sapply(samples.stage1,
+                             function(x) colMeans(x[-burn,])))
+lam.sig.mean.st2 <- t(sapply(samples.stage2, function(x)
+    colMeans(x[-burn,c("lam0Mean", "sigmaMean")])))
+lam.sig.mean.joint <- t(sapply(samples.joint, function(x)
+    colMeans(x[-burn,c("lam0Mean", "sigmaMean")])))
+
+## Stage 1 estimates
 hist(lam.sig.mean.st1[,1]); abline(v=0.07, col=4, lwd=3)
 hist(lam.sig.mean.st1[,2]); abline(v=400, col=4, lwd=3)
 
-## Stage 2 estimates still end up correct
+## Stage 2 estimates (updated)
 hist(lam.sig.mean.st2[,1]); abline(v=0.07, col=4, lwd=3)
 hist(lam.sig.mean.st2[,2]); abline(v=400, col=4, lwd=3)
 
@@ -41,7 +44,7 @@ hist(lam.sig.mean.joint[,2]); abline(v=400, col=4, lwd=3)
 plot(lam.sig.mean.st1[,1], lam.sig.mean.joint[,1])
 plot(lam.sig.mean.st1[,2], lam.sig.mean.joint[,2])
 
-## And here. Great agreement b/w stage 2 and joint
+## And here. 
 pdf("sim-lam0sig.pdf", width=4, height=7)
 op <- par(mfcol=c(2,1), mai=c(0.7, 0.7, 0.4, 0.1), mgp=c(2.2,1,0))
 plot(lam.sig.mean.st2[,1], lam.sig.mean.joint[,1],
@@ -59,7 +62,8 @@ plot(lam.sig.mean.st1, type="n", xlim=c(0.06,0.08))
 ## points(lam.sig.mean.st2, pch=2, col=2)
 points(0.07, 400, pch=16, cex=2, col="red")
 arrows(lam.sig.mean.st1[,1], lam.sig.mean.st1[,2],
-       lam.sig.mean.st2[,1], lam.sig.mean.st2[,2], col=rgb(0,0,0,0.2), length=0.08)
+       lam.sig.mean.st2[,1], lam.sig.mean.st2[,2],
+       col=rgb(0,0,0,0.2), length=0.08)
 
 plot(lam.sig.mean.st2, xlim=c(0.05, 0.09), ylim=c(385, 415))
 points(lam.sig.mean.joint, pch=2, col=2)
@@ -70,9 +74,9 @@ points(lam.sig.mean.joint, pch=2, col=2)
 ## Compare beta parameters
 
 beta.mean.st2 <- t(sapply(samples.stage2, function(x)
-    colMeans(x[,c("beta0.ED", "beta1.ED")])))
+    colMeans(x[-burn,c("beta0.ED", "beta1.ED")])))
 beta.mean.joint <- t(sapply(samples.joint, function(x)
-    colMeans(x[,c("beta0.ED", "beta1.ED")])))
+    colMeans(x[-burn,c("beta0.ED", "beta1.ED")])))
 
 ## Stage 2 estimates
 hist(beta.mean.st2[,1]); abline(v=1, col=4, lwd=3)
@@ -96,6 +100,12 @@ system("gopen sim-betas.pdf")
 plot(beta.mean.st2, xlim=c(0.5, 1.5), ylim=c(-0.05, 0))
 points(beta.mean.joint, pch=2, col=2)
 
+## Outlier
+which( beta.mean.st2[,2]< -0.15)
+
+plot(samples.stage2[[67]][,c("beta0.ED","beta1.ED")])
+plot(window(samples.joint[[67]][,c("beta0.ED","beta1.ED")],
+            start=101, end=2100))
 
 
 ## Compare N(t)
@@ -147,13 +157,17 @@ N.mean <- cbind(rbind(N.mean.st2.df, N.mean.joint.df, N.true.df),
                            each=nrow(N.mean.st2.df)))
 
 
-xyplot(N ~ year | sim, N.mean, group=method, layout=c(4,5),
+pdf("sim-Nt.pdf", width=7, height=8)
+xyplot(N ~ year | sim, N.mean, group=method, layout=c(5,20),
+       xlab="Time",
+       strip=FALSE, auto.key=list(draw=TRUE, points=FALSE, lines=TRUE),
        type="l", panel=function(...) {
            panel.xyplot(...)
-           panel.polygon()
-           as.table=TRUE)
-})
-
+##           panel.polygon()
+       },
+       as.table=TRUE)
+dev.off()
+system("gopen sim-Nt.pdf")
 
 
 

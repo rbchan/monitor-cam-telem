@@ -59,10 +59,31 @@ be found at \url{https://github.com/rbchan/monitor-cam-telem}.
 
 \section*{Results and Discussion}
 
-The number of individuals captured and outfitted with telemetry
-devices ranged from 13--35 in the simulated datasets. As with the deer
-example, only a small fraction (ranging from 0--10) were detected by
-cameras. 
+Average population size in the simulation study declined from 73 to 45
+during the 20 year period (Figure S1). The number of marked
+individuals ranged from 1 to 27 and was approximately 20\% of the
+total populatoin size over the 20 primary sampling periods (Figure S1). 
+
+Parameter estimates (posterior means) were similar for the
+encounter rate parameters (Figure S2), the density trend
+parameters (Figure S3), and for the realized values of abundance
+(Figure S4). 
+
+Obtaining 10,000 MCMC draws (after discarding 2000 burn-in) took
+approximately 15 hours for the two-stage model and 17 hours for the
+joint model. Unlike the two-stage model, run time for the joint model
+will increase with the complexity of the marking process.
+
+
+\clearpage
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{sim/sim-N-n}
+  \caption{Figure S1. Population size ($N$) and the number of marked
+    individuals over time. }   
+  \label{fig:sim-N-n}
+\end{figure}
 
 
 
@@ -71,7 +92,7 @@ cameras.
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.7\textwidth]{sim/sim-lam0sig}
-  \caption{Figure S1. Results from the 100 simulated datasets used to
+  \caption{Figure S2. Results from the 100 simulated datasets used to
     compare posterior means for the encounter rate parameters
     ($\lambda_0$ and $\sigma$) for the joint model and the two-stage
     model. }   
@@ -84,11 +105,23 @@ cameras.
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.7\textwidth]{sim/sim-betas}
-  \caption{Figure S1. Results from the 100 simulated datasets used to
+  \caption{Figure S3. Results from the 100 simulated datasets used to
     compare posterior means for the density trend parameters
     ($\beta_0$ and $\beta_1$) for the joint model and 
     the two-stage model. }  
   \label{fig:sim-betas}
+\end{figure}
+
+
+\clearpage
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{sim/sim-Nt}
+  \caption{Figure S4. Results from the 100 simulated datasets used to
+    compare posterior means for abundance over time
+    ($N_t$) for the joint model and the two-stage model. }  
+  \label{fig:sim-N}
 \end{figure}
 
 
