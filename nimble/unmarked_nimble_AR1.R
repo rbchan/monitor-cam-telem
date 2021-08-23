@@ -179,8 +179,6 @@ system.time(mod.nimble <- nimbleModel(code = densityNimble,
   
 
 
-  ### If using runMCMC()
-  samplesList <- mcmc.list(outs) # implements coda package 
   summary(samplesList)
 
 

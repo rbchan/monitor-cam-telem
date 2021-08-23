@@ -13,7 +13,7 @@ library(rjags)
 library(coda)
 
 # Data for Bear Island camera trapping array 
-load("deer.RData")
+load("marked_data.RData")
 
 #### Data Description #### 
 
@@ -66,8 +66,79 @@ t.in
 # array[trap, secondary occasion, primary period]
 oper3D 
 
-
 #### Model Development ####
+cat("
+  # Known number of marked individuals 
+  # AR1 joint model for camera and telemetry data 
+  model {
+    
+    ### Prior Distributions for autoregressive terms 
+    # Detection parameter - lam0
+    beta0.loglam0 ~ dnorm(log(0.1), 1/(0.5^2)) # mean (over time) lam0 on log scale  
+    beta1.loglam0 ~ dnorm(0, 0.1) 
+    alpha.lam0  ~ dunif(-1, 1) ## AR1 correlation for lam0
+    eps.sd.lam0 ~ dunif(0, 2) ## SD of lam0 noise
+    epsilon.lam0[start] ~ dnorm(0, 1/(eps.sd.lam0^2)) # lam0 noise
+    
+    
+    # spatial scale parameter - sigma 
+    beta0.logsigma ~ dnorm(log(350), 1/(0.5^2)) # mean (over time) lam0 on log scale  
+    beta1.logsigma ~ dnorm(0, 0.1)
+    eps.sd.sigma ~ dunif(0, 2) ## SD of sigma noise
+    alpha.sigma ~ dunif(-1, 1) ## AR1 correlation for sigma 
+    epsilon.sigma[start] ~ dnorm(0, 1/(eps.sd.sigma^2)) # sigma noise
+    
+    
+    # Starting values 
+    loglam0[start] <- beta0.loglam0 + beta1.loglam0 * start + epsilon.lam0[start]
+    lam0[start] <- exp(loglam0[start])
+    logsigma[start] <- beta0.logsigma + beta1.logsigma * start + epsilon.sigma[start]
+    sigma[start] <- exp(logsigma[start])
+    
+    #Autoregression 
+    for(t in (start+1):end){
+      # autoregression on noise for lam0
+      epsilon.lam0[t] ~ dnorm(alpha.lam0 * epsilon.lam0[t-1], 1/(eps.sd.lam0^2))
+      loglam0[t] <- beta0.loglam0 + beta1.loglam0 * t + epsilon.lam0[t]
+      lam0[t] <- exp(loglam0[t])
+      # autoregression on noise for sigma
+      epsilon.sigma[t] ~ dnorm(alpha.sigma * epsilon.sigma[t-1], 1/(eps.sd.sigma^2))  
+      logsigma[t] <- beta0.logsigma + beta1.logsigma * t + epsilon.sigma[t]
+      sigma[t] <- exp(logsigma[t])
+    }
+    
+    
+    
+    
+    # SCR model 
+    for(i in 1:n0) { # loop over ear-tagged deer
+      for(t in t.in[i,1]:t.in[i, t.length[i]]) { # loop over every occurrence of deer on camera grid
+        s[i,1,t] ~ dunif(xlim[1], xlim[2])  # activity centers probabilities, assumed uniform  
+        s[i,2,t] ~ dunif(ylim[1], ylim[2])
+        # Model telemetry data conditional on activity centers 
+        for(k in 1:nTelemLocs[i,t]) { # for each telemetry location 
+          u[i,k,1,t] ~ dnorm(s[i,1,t], 1/(sigma[t]^2)) # x coord 
+          u[i,k,2,t] ~ dnorm(s[i,2,t], 1/(sigma[t]^2)) # y coord 
+        }
+        for(j in 1:nTraps) { # loop over each trap location 
+          # calculate distance from activity center to trap location  
+          d[i,j,t] <- sqrt((s[i,1,t]-x[j,1])^2 + (s[i,2,t]-x[j,2])^2)
+          for(k in 1:nOccasions) { # loop over each secondary sampling occasion 
+            # calculate encounter rate as a distance decay fx with camera operational matrix 
+            lambda[i,j,k,t] <- lam0[t]*exp(-d[i,j,t]^2 / (2*sigma[t]^2)) * oper[j,k,t] 
+            # convert lambda to detection prob, Pr(at least one detection)  
+            psi[i,j,k,t] <- 1-exp(-lambda[i,j,k,t]) 
+            # This implies a Poisson distribution for independent counts
+            y[i,j,k,t] ~ dbern(psi[i,j,k,t]) # convert to binary counts using Bernoulli distribution
+          }
+        }
+      }
+    }
+  }", file = "marked+telemetry-AR1.jag")
+
+
+
+#### Model Initialization ####
 jd.bern.auto.does <- list(y=histories4D, x=x, u=telemetry.deer,
                           xlim = xlim, ylim = ylim,
                           t.in = t.in, t.length = t.length, 
@@ -101,13 +172,16 @@ jp.bern.auto.does <- c("sigma", "lam0",
                        "eps.sd.lam0", "eps.sd.sigma",
                        "deviance")
 
+
+#### Model Evaluation ####
+
 load.module("dic") # Monitor deviance
 
 n.adapt = 100 # Set adaptive phase
 n.iter = 15000 # Set number of iterations
 
 # Configure the model 
-jm.bern.auto.does <- jags.model(file="scr0-marked+telemetry-AR1.jag",
+jm.bern.auto.does <- jags.model(file="marked+telemetry-AR1.jag",
                                 data=jd.bern.auto.does,
                                 inits=ji.bern.auto.does,
                                 n.adapt=n.adapt)
