@@ -1,5 +1,5 @@
 # monitor-cam-telem
-Data and code accompanying publication: 
+Data and code accompanying the manuscript: 
 
 Margenau, L. L. S., M. J. Cherry, K. V. Miller, E. P. Garrison, and R. B. Chandler. Monitoring partially-marked populations using camera and telemetry data. Ecological Applications. In Review. 
 
@@ -12,3 +12,6 @@ jags - R and JAGS code for implementing the two-stage model. Note: the marked mo
 nimble - R and NIMBLE code for implementing the two-stage model. Note: the unmarked model was used for analysis within the manuscript
 
 supp - Supplementary simulation study comparing the two-stage model to a joint SMR model. 
+
+
+[![DOI](https://zenodo.org/badge/397264724.svg)](https://zenodo.org/badge/latestdoi/397264724)
