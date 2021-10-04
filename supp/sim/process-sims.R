@@ -144,6 +144,12 @@ plot(N.mean.st2[,1], N.mean.joint[,1])
 
 
 
+## Compare to data-generating (actual) values of abundance
+
+load("sims-case1.gzip")
+
+
+
 N.true <- t(sapply(sims.case1, function(x) colSums(x$latent$z)))
 
 N.true.df <- data.frame(N=as.vector(N.true),
@@ -173,7 +179,6 @@ system("gopen sim-Nt.pdf")
 
 ## Summarize sim data
 
-load("sims-case1.gzip")
 
 N <- sapply(sims.case1, function(x) colSums(x$latent$z))
 n.marked <- sapply(sims.case1, function(x) x$n.marked)
