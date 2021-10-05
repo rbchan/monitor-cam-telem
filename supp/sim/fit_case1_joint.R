@@ -5,7 +5,7 @@ load("sims-case1.gzip")
 
 
 
-(n.cores <- min(detectCores()-1, 10))
+n.cores <- 10
 (n.datasets <- length(sims.case1))
 (n.batches <- ceiling(n.datasets/n.cores))
 (batch.size <- n.datasets/n.batches)
@@ -75,6 +75,7 @@ for(i in 1:n.batches) {
                                       FUN=do.jags)
     if(i==1)
         save(samples.joint, file="samples_joint.gzip")
+    gc()
 }
 
 save(samples.joint, file="samples_joint.gzip")
@@ -82,3 +83,40 @@ save(samples.joint, file="samples_joint.gzip")
 cat("Done", format(Sys.time()), "\n")
 
 
+## Doing batch 1 2021-09-13 11:34:17 
+## Doing batch 2 2021-09-14 11:22:43 
+## Doing batch 3 2021-09-15 10:39:33 
+## Doing batch 4 2021-09-16 10:17:28 
+## Doing batch 5 2021-09-17 12:01:25 
+## Doing batch 6 2021-09-19 14:51:36 
+## Doing batch 7 2021-09-22 00:47:44 
+## Doing batch 8 2021-09-24 20:49:15 
+## Doing batch 9 2021-09-27 16:45:55 
+## Doing batch 10 2021-09-30 13:12:25 
+## Done 2021-10-03 12:41:23 
+
+
+## Doing batch 1 2021-06-09 16:04:55 
+## Doing batch 2 2021-06-10 15:27:33 
+## Doing batch 3 2021-06-11 13:14:52 
+## Doing batch 4 2021-06-12 10:34:51 
+## Doing batch 5 2021-06-13 09:38:19 
+## Doing batch 6 2021-06-15 12:00:06 
+## Doing batch 7 2021-06-17 20:23:14 
+## Doing batch 8 2021-06-20 20:17:56 
+## Doing batch 9 2021-06-23 17:41:55 
+## Doing batch 10 2021-06-26 15:19:31 
+## Done 2021-06-29 12:36:20 
+
+
+## Doing batch 1 2021-07-06 11:48:07 
+## Doing batch 2 2021-07-07 04:15:16 
+## Doing batch 3 2021-07-07 20:54:37 
+## Doing batch 4 2021-07-08 13:27:56 
+## Doing batch 5 2021-07-09 08:20:28 
+## Doing batch 6 2021-07-11 03:58:38 
+## Doing batch 7 2021-07-13 08:42:23 
+## Doing batch 8 2021-07-16 01:46:52 
+## Doing batch 9 2021-07-18 23:03:08 
+## Doing batch 10 2021-07-21 20:48:11 
+## Done 2021-07-24 19:11:04 

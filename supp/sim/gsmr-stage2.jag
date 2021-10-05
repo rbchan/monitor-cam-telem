@@ -37,7 +37,7 @@ model {
                 lambda[i,j,t] <- lam0[t]*exp(-d[i,j,t]^2 / (2*sigma[t]^2))
             }
         }
-        ## Unmarked individuals
+        ## Marked and unmarked individuals
         for(j in 1:J) {
             Lambda[j,t] <- inprod(lambda[1:M,j,t], z[1:M,t])
             p[j,t] <- 1-exp(-Lambda[j,t])

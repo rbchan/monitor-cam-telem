@@ -54,7 +54,7 @@ do.jags.stage1 <- function(dataset) {
 
     jm <- jags.model(file="gsmr-stage1.jag", data=jd, inits=ji, n.adapt=100)
 
-    jc <- coda.samples(jm, jp, n.iter=2000) ##12000)
+    jc <- coda.samples(jm, jp, n.iter=12000)
 
     return(jc)
 
@@ -72,6 +72,7 @@ do.jags.stage2 <- function(dataset) {
                     J=nrow(n.all), T=ncol(n.all),
                     xlim = xlim, ylim = ylim, 
                     Area = Area, x = x, 
+##                    n=n.unmarked,   ## BUG FIX: 2021-08-10
                     n=n.all,
                     mean.log.sigma.lam0=mean.log.sigma.lam0,
                     vcov.log.sigma.lam0=vcov.log.sigma.lam0))
@@ -92,7 +93,7 @@ do.jags.stage2 <- function(dataset) {
 
     jm2 <- jags.model(file="gsmr-stage2.jag", data=jd2, inits=ji2, n.adapt=100)
 
-    jc2 <- coda.samples(jm2, jp2, n.iter=2000) ##12000)
+    jc2 <- coda.samples(jm2, jp2, n.iter=12000)
 
     return(jc2)
 
@@ -138,4 +139,58 @@ save(samples.stage2, file="samples_stage2.gzip")
 cat("Done", format(Sys.time()), "\n")
 
 
+## Doing batch 1 2021-09-13 11:35:59 
+## Doing batch 2 2021-09-14 10:51:18 
+## Doing batch 3 2021-09-15 10:24:43 
+## Doing batch 4 2021-09-16 09:27:51 
+## Doing batch 5 2021-09-17 08:05:15 
+## Doing batch 6 2021-09-18 11:00:07 
+## Doing batch 7 2021-09-19 09:42:16 
+## Doing batch 8 2021-09-20 06:06:00 
+## Doing batch 9 2021-09-21 05:58:25 
+## Doing batch 10 2021-09-22 02:51:05 
+## Done 2021-09-23 01:46:30 
 
+
+
+## Doing batch 1 2021-06-09 16:06:33
+## cat("Done", format(Sys.time()), "\n")
+## Doing batch 2 2021-06-10 13:03:53
+## Doing batch 3 2021-06-11 09:14:23
+## Doing batch 4 2021-06-12 03:53:16
+## Doing batch 5 2021-06-13 01:06:20
+## Doing batch 6 2021-06-14 12:08:49
+## Doing batch 7 2021-06-16 03:09:37
+## Doing batch 8 2021-06-17 02:45:22
+## Doing batch 9 2021-06-17 21:29:46
+## Doing batch 10 2021-06-18 19:44:27
+## > Done 2021-06-19 15:10:14
+
+
+## > source("fit_case1_two-stage.R")
+## Doing batch 1 2021-07-06 11:52:33 
+## Doing batch 2 2021-07-07 12:21:00 
+## Doing batch 3 2021-07-08 12:39:58 
+## Doing batch 4 2021-07-09 13:09:19 
+## Doing batch 5 2021-07-10 13:33:46 
+## Doing batch 6 2021-07-11 14:05:51 
+## Doing batch 7 2021-07-12 17:54:47 
+## Doing batch 8 2021-07-13 19:55:52 
+## Doing batch 9 2021-07-14 20:42:30 
+## Doing batch 10 2021-07-16 13:29:31 
+## Done 2021-07-18 04:21:47 
+
+
+## Doing batch 1 2021-08-11 08:24:55 
+## save(samples.stage2, file="samples_stage2.gzip")
+## cat("Done", format(Sys.time()), "\n")
+## Doing batch 2 2021-08-11 23:17:00 
+## Doing batch 3 2021-08-12 14:03:58 
+## Doing batch 4 2021-08-13 04:57:20 
+## Doing batch 5 2021-08-13 19:39:11 
+## Doing batch 6 2021-08-14 10:10:28 
+## Doing batch 7 2021-08-15 00:50:28 
+## Doing batch 8 2021-08-15 15:45:19 
+## Doing batch 9 2021-08-16 06:31:28 
+## Doing batch 10 2021-08-16 21:19:42 
+## > > Done 2021-08-17 12:08:01 
